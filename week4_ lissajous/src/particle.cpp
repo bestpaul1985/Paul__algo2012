@@ -1,0 +1,66 @@
+#include "particle.h"
+
+
+//------------------------------------------------------------
+particle::particle(){
+	setInitialCondition(0,0,0,0);
+	damping = 0.01f;
+}
+
+//------------------------------------------------------------
+void particle::resetForce(){
+    // we reset the forces every frame
+    frc.set(0,0);
+}
+
+//------------------------------------------------------------
+void particle::addForce(float x, float y){
+    // add in a force in X and Y for this frame.
+    frc.x = frc.x + x;
+    frc.y = frc.y + y;
+}
+
+//------------------------------------------------------------
+void particle::addDampingForce(){
+	
+	// the usual way to write this is  vel *= 0.99
+	// basically, subtract some part of the velocity 
+	// damping is a force operating in the oposite direction of the 
+	// velocity vector
+	
+	//frc = frc - vel * damping;
+	
+    frc.x -= vel.x * damping;
+    frc.y -= vel.y * damping;
+}
+
+//------------------------------------------------------------
+void particle::setInitialCondition(float px, float py, float vx, float vy){
+    pos.set(px,py);
+	vel.set(vx,vy);
+}
+
+//------------------------------------------------------------
+void particle::update(){	
+	vel = vel + frc;
+	pos = pos + vel; 
+}
+
+//------------------------------------------------------------
+void particle::draw(){
+    
+  
+	
+    for (int i=0; i<300; i++) {
+        float xorig = pos.x;
+        float yorig = pos.y;
+        float angle = ofGetElapsedTimef()/4;
+        float radius = 300;
+        float k = TWO_PI/300;
+        float x = xorig + radius * cos((angle+k*i) * 3);
+        float y = yorig + radius * -sin((angle+k*i) * 4);
+        ofCircle(x, y, 3);
+    }
+   
+}
+
