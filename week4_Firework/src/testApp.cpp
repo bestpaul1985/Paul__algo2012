@@ -31,7 +31,7 @@ void testApp::update(){
 	// then update
     
     posx = ofRandom(400,ofGetWidth()-400);
-    posy = ofRandom(400,ofGetHeight()/2-400);
+    posy = ofRandom(300,ofGetHeight()/2);
     radius = ofRandom(5,15);
     
 	
