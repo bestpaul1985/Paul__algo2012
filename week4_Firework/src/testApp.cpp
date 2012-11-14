@@ -42,7 +42,6 @@ void testApp::update(){
 		particles[i].resetForce();
 		particles[i].addForce(0.0, 0.18);
 		particles[i].addDampingForce();
-//		particles[i].bounceOffWalls();
 		particles[i].update();
         
         if (particles[i].colorOpen) {
@@ -52,9 +51,7 @@ void testApp::update(){
        
 	}
     
-    
-//    cout << "frc.y = "<< ofToString(particles[0].frc.y) << endl;
-
+ 
 }
 
 //--------------------------------------------------------------

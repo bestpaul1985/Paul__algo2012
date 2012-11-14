@@ -36,6 +36,7 @@ class particle
         ofImage *asteroid;
         ofImage *saver;
         ofPoint prevPos;
+        ofPoint follower;
 		float damping;
         int drawWhat;
         float angle;
@@ -44,6 +45,9 @@ class particle
         float _posx, _posy;
         float radius;
         float scale;
+        float catchUpSpeed;
+    
+        vector<ofPoint> points;
     
 };
 

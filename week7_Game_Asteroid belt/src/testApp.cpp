@@ -17,14 +17,22 @@ void testApp::setup(){
     ofSetCircleResolution(30);
     
     //goal
-    saver.loadImage("saver.png");
+    
+    for (int i; i<3; i++) {
+        ofImage img;
+        img.loadImage("xiaoren"+ofToString(i)+".png");
+        xiaoren.push_back(img);
+    }
+    
+//    saver.loadImage("xiaoren.png");
+    
     for (int i = 0; i < 30; i++){
         particle * p = new particle();
         goals.push_back(p);
         goals[i]->drawWhat =2;
         goals[i]->setInitialCondition(ofRandom(-ofGetWidth()*0.8,ofGetWidth()*2*0.8),ofRandom(-ofGetWidth()*0.8, ofGetWidth()*2)*0.8,0,0);
         goals[i]->vel.set(0,0);
-        goals[i]->saver = & saver;
+        goals[i]->saver = & xiaoren[ofRandom(0,2)];
     }
     
     firstTime=ofGetElapsedTimeMillis();
@@ -36,7 +44,7 @@ void testApp::setup(){
     shipExplode=false;
     ship.setInitialCondition(ofGetWidth()/2, ofGetHeight()/2, 0, 0);
     ship.drawWhat = 1;
-    ship.damping = 0.06f;
+    ship.damping = 0.03f;
     shipImag.loadImage("ship001.png");
     shipImagFire.loadImage("fire.png");
     shipRadiance = 40;
@@ -82,8 +90,8 @@ void testApp::update(){
     }
     if(shipMoveBack){
         shipForce-=0.001;
-        if(shipForce<=0){
-            shipForce=0;
+        if(shipForce<=0.002){
+            shipForce=-0.002;
         }
     }
     if (shipRotateLeft) {
@@ -163,17 +171,18 @@ void testApp::update(){
     for (int i = 0; i < myParticles.size(); i++){
         for (int j = 0; j < goals.size(); j++){
     
-            myParticles[i]->addRepulsionForce(goals[j]->pos.x,goals[j]->pos.y,50,0.02f);
+            myParticles[i]->addRepulsionForce(goals[j]->pos.x,goals[j]->pos.y,70,0.02f);
        
         }
     }
     
     float diffTime2 = ofGetElapsedTimeMillis()- firstTime;
+    
     for (int i = 0; i < myParticles.size(); i++){
         myParticles[i]->addForce(0,0);
         myParticles[i]->addAttractionForce(ship.pos.x,ship.pos.y,shipRadiance*myParticles[i]->scale,0.02f/myParticles[i]->scale);
         if (diffTime2<1000) {
-            myParticles[i]->addRepulsionForce(ship.pos.x, ship.pos.y, 200, 0.1f);
+            myParticles[i]->addRepulsionForce(ship.pos.x, ship.pos.y, 200, 0.2f);
         }
         
         myParticles[i]->addDampingForce();
@@ -183,7 +192,7 @@ void testApp::update(){
 
         ofPoint dis;
         dis = ship.pos - myParticles[i]->pos;
-        if (dis.length()<10+(myParticles[i]->asteroid->width/6*myParticles[i]->scale)) {
+        if (dis.length()<23+(myParticles[i]->asteroid->width/6*myParticles[i]->scale)) {
             
             
             orginPos.set(0, 0);
@@ -210,7 +219,7 @@ void testApp::update(){
                 goals[i]->drawWhat =2;
                 goals[i]->setInitialCondition(ofRandom(-ofGetWidth()*0.8,ofGetWidth()*2*0.8),ofRandom(-ofGetWidth()*0.8, ofGetWidth()*2)*0.8,0,0);
                 goals[i]->vel.set(0,0);
-                goals[i]->saver = & saver;
+                goals[i]->saver = & xiaoren[ofRandom(0,2)];
             }
             
             bgPos.set(0, 0);
@@ -271,22 +280,22 @@ void testApp::draw(){
         verdana2.drawString("VICTORY", ofGetWidth()/2-120, ofGetHeight()/2);
     }
     ofSetColor(225);
-	verdana.drawString("Missed Capsules: "+ofToString(30-score), 30, 35);
+	verdana.drawString("Survivor: "+ofToString(30-score), 30, 35);
     verdana.drawString("Shield: "+ofToString(shield), 500, 35);
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed  (int key){
-    if (key=='w') {
+    if (key=='w'||key=='W'||key==OF_KEY_UP) {
         
         shipMoveForward = true;
-    }else if(key=='s'){
+    }else if(key=='s'||key=='S'||key==OF_KEY_DOWN){
         
         shipMoveBack = true;
-    }else if(key=='a'){
+    }else if(key=='a'||key=='A'||key==OF_KEY_LEFT){
         
         shipRotateLeft =true;
-    }else if(key=='d'){
+    }else if(key=='d'||key=='D'||key==OF_KEY_RIGHT){
         
         shipRotateRight = true;
     }else if(key==' '){
@@ -301,18 +310,18 @@ void testApp::keyPressed  (int key){
 //--------------------------------------------------------------
 void testApp::keyReleased  (int key){
     
-    if (key=='w') {
+    if (key=='w'||key=='W'||key==OF_KEY_UP) {
 
         shipMoveForward = false;
         shipForce = 0;
-    }else if(key=='s'){
+    }else if(key=='s'||key=='S'||key==OF_KEY_DOWN){
          
         shipMoveBack = false;
         shipForce = 0;
-    }else if(key=='a'){
+    }else if(key=='a'||key=='A'||key==OF_KEY_LEFT){
          
         shipRotateLeft =false;
-    }else if(key=='d'){
+    }else if(key=='d'||key=='D'||key==OF_KEY_RIGHT){
          
         shipRotateRight = false;
     }

@@ -4,12 +4,14 @@
 //------------------------------------------------------------
 particle::particle(){
 	setInitialCondition(0,0,0,0);
-	damping = 0.01f;
+	damping = 0.015f;
     drawWhat = 0;
     _posx=0;
     _posy=0;
     radius = 30;
     prevPos.set(0, 0);
+    catchUpSpeed = 0.03f;
+    
 }
 
 //------------------------------------------------------------
@@ -184,13 +186,42 @@ void particle::update(){
     switch (drawWhat) {
         case 0:
             
+           
+        break;
+       
+    }
+    
+    switch (drawWhat){
+		case 0:
+        
+        {
             float dx = vel.x-prevPos.x;
             float dy = vel.y-prevPos.y;
             myAngle = atan2(dy,dx);
             prevPos.set(vel);
+        }
             
-        break;
-    }
+			break;
+		
+        case 1:
+            
+        {
+
+            if (pos!=prevPos) {
+                
+                ofPoint p;
+                p = pos;
+                points.push_back(p);
+                
+            }
+            
+            if (points.size()>100) {
+                points.erase(points.begin());
+            }
+        }
+            
+			break;
+	}
    
 }
 
@@ -208,8 +239,7 @@ void particle::draw(){
                 ofRotateZ((myAngle+ofGetElapsedTimef())*RAD_TO_DEG);
                 ofSetColor(255, 255, 255);
                 asteroid->draw(0,0, asteroid->width/3*scale, asteroid->height/3*scale);
-//                ofSetColor(255, 220, 0, 10);
-//                ofCircle(0,0, radius*scale);
+
             ofPopMatrix();
             ofSetRectMode(OF_RECTMODE_CORNER);
             ofDisableAlphaBlending();
@@ -219,15 +249,22 @@ void particle::draw(){
         case 1:
             ofEnableAlphaBlending();
             ofSetRectMode(OF_RECTMODE_CENTER);
+            
+            
             ofPushMatrix();
-            ofTranslate(pos.x, pos.y);
-            ofRotateZ(angle);
-            alpha = ofMap(alpha, 0, 0.05, 0, 255);
-            ofSetColor(255, alpha);
-            imgFire->draw(-30, 0);
-            ofSetColor(255, 255, 255);
-            img->draw(0, 0);
+            
+                ofTranslate(pos.x, pos.y);
+                ofRotateZ(angle);
+                alpha = ofMap(alpha, 0, 0.05, 0, 255);
+                ofSetColor(255, alpha);
+                imgFire->draw(-30, 0);
+                ofSetColor(255, 255, 255);
+                img->draw(0, 0);
+            
             ofPopMatrix();
+            
+            
+            
             ofDisableAlphaBlending();
             ofSetRectMode(OF_RECTMODE_CORNER);
             break;

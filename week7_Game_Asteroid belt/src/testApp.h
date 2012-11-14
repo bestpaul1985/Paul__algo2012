@@ -27,6 +27,7 @@ class testApp : public ofSimpleApp{
         particle goal;
         ofImage backgroundImage;
         ofImage saver;
+        vector<ofImage> xiaoren;
         ofImage asteroid;
         ofImage shipImag;
         ofImage shipImagFire;
